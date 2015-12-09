@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AivDraw</name>
+    </assembly>
+    <members>
+        <member name="F:Aiv.Draw.Window.bitmap">
+            <summary>
+            Used to draw into the form
+            </summary>
+        </member>
+        <member name="F:Aiv.Draw.Window.width">
+            <summary>
+            Window width
+            </summary>
+        </member>
+        <member name="F:Aiv.Draw.Window.height">
+            <summary>
+            Window height
+            </summary>
+        </member>
+        <member name="P:Aiv.Draw.Window.CursorVisible">
+            <summary>
+            Get or sets the cursor visibility
+            </summary>
+        </member>
+        <member name="P:Aiv.Draw.Window.deltaTime">
+            <summary>
+            Time (in seconds) passed since the last <c>Blit()</c>
+            </summary>
+        </member>
+        <member name="F:Aiv.Draw.Window.opened">
+            <summary>
+            Sets or get if window is opened or closed;
+            </summary>
+        </member>
+        <member name="M:Aiv.Draw.Window.SetIcon(System.String,System.Boolean)">
+            <summary>
+            Sets Window's Icon
+            </summary>
+            <param name="path">path to the icon</param>
+            <param name="isRelative">if <c>true</c>, the path will be relative to the application location, otherwise the path will be absoulte</param>
+        </member>
+        <member name="M:Aiv.Draw.Window.#ctor(System.Int32,System.Int32,System.String,Aiv.Draw.PixelFormat)">
+            <summary>
+            Creates a new Window
+            </summary>
+            <param name="width">internal window's width</param>
+            <param name="height">internal window's height</param>
+            <param name="title">window's title</param>
+            <param name="format">Pixel Format</param>
+        </member>
+        <member name="P:Aiv.Draw.Window.mouseX">
+            <summary>
+            Returns mouse X position relative to the form
+            </summary>
+        </member>
+        <member name="P:Aiv.Draw.Window.mouseY">
+            <summary>
+            Returns mouse Y position relative to the form
+            </summary>
+        </member>
+        <member name="P:Aiv.Draw.Window.mouseLeft">
+            <summary>
+            Returns <c>true</c> if mouse left button is pressed, otherwise <c>false</c>
+            </summary>
+        </member>
+        <member name="P:Aiv.Draw.Window.mouseRight">
+            <summary>
+            Returns <c>true</c> if mouse right button is pressed, otherwise <c>false</c>
+            </summary>
+        </member>
+        <member name="P:Aiv.Draw.Window.mouseMiddle">
+            <summary>
+            Returns <c>true</c> if mouse middle button is pressed, otherwise <c>false</c>
+            </summary>
+        </member>
+        <member name="M:Aiv.Draw.Window.GetKey(Aiv.Draw.KeyCode)">
+            <summary>
+            Returns true when <c>key</c> is pressed
+            </summary>
+            <param name="key">key to check if is pressed</param>
+        </member>
+        <member name="M:Aiv.Draw.Window.Blit">
+            <summary>
+            Draws the current <c>Window.bitmap</c> into the form
+            </summary>
+        </member>
+    </members>
+</doc>
