@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -16,13 +17,14 @@ namespace Bomberman
 		public int TileSize { get; private set; }
 		public Tile.TileType[] Tiles { get; private set; }
 
-		public Map(int width, int height, int tileSize, string filepath)
+		public Map(int tileSize, string filepath)
 		{
-			Width = width;
-			Height = height;
 			TileSize = tileSize;
 
-			string file = System.IO.File.ReadAllText(filepath);
+			string file = File.ReadAllText(filepath);
+			string[] tmp = file.Split('\r');
+			this.Height = tmp.Length - 1;
+			this.Width = tmp[0].Split(',').Length;
 			file = file.Replace("\r\n", ",");
 
 			Tiles = new Tile.TileType[file.Split(',').Length];

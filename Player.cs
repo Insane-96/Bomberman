@@ -13,7 +13,7 @@ namespace Bomberman
 	{
 		public int BombsPlaced;
 		public int BombsAvailable;
-		public Bomb[] Bombs;
+		public List<Bomb> Bombs;
 		public int X { get; private set; }
 		public int Y { get; private set; }
 		public bool justMoved { get; private set; }
@@ -42,23 +42,15 @@ namespace Bomberman
 				X = 1;
 				Y = 1;
 			}
-
-			Bombs = new Bomb[BombsAvailable];
-			for (int i = 0; i < Bombs.Length; i++)
-			{
-				Bombs[i] = new Bomb();
-			}
+			
+			Bombs = new List<Bomb>();
 		}
 
 		public void PlaceBomb(Window window, Map map)
 		{
-			Console.WriteLine(BombsAvailable);
-			Console.WriteLine(BombsPlaced);
 			if (BombsAvailable > 0 && map.Tiles[Utils.GetPos(X, Y, map.Width)] == Tile.TileType.None)
 			{
-				Bombs[BombsPlaced].X = X;
-				Bombs[BombsPlaced].Y = Y;
-				Bombs[BombsPlaced].TimeToExplode = 3;
+				Bombs.Add(new Bomb(X, Y, 3));
 
 				map.Tiles[Utils.GetPos(X, Y, map.Width)] = Tile.TileType.Bomb;
 
@@ -67,9 +59,6 @@ namespace Bomberman
 				BombsAvailable--;
 				BombsPlaced++;
 			}
-			Console.WriteLine(BombsAvailable);
-			Console.WriteLine(BombsPlaced);
-			Console.WriteLine();
 		}
 
 		public void Move(int x, int y, Map map)

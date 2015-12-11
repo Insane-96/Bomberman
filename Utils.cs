@@ -1,5 +1,6 @@
 ﻿using System;
 using Aiv.Draw;
+using System.Threading;
 
 namespace windowApp
 {
@@ -15,9 +16,12 @@ namespace windowApp
 			if (x > window.width - 1 || x < 0 || y > window.height || y < 0) return;
 			int pos = (y * 3 * window.width) + x * 3;
 
-			window.bitmap[pos] = r;
-			window.bitmap[pos + 1] = g;
-			window.bitmap[pos + 2] = b;
+			if (pos < window.bitmap.Length)
+			{
+				window.bitmap[pos] = r;
+				window.bitmap[pos + 1] = g;
+				window.bitmap[pos + 2] = b;
+			}
 		}
 
 		public static void Clear(Window window, byte r = 0, byte g = 0, byte b = 0)
@@ -60,6 +64,20 @@ namespace windowApp
 			for (int posY = 0; posY < height; posY++)
 				DrawHorizLine(window, x, y + posY, width, r, g, b);
 
+		}
+
+		public static void DrawCircle(Window window, int _x, int _y, int radius, byte r, byte g, byte b)
+		{
+			for (int x = -radius; x < radius; x++)
+			{
+				int height = (int)Math.Sqrt(radius * radius - x * x);
+
+				for (int y = -height; y < height; y++)
+				{
+					//if (y == -height || y == height - 1 || x == -radius || x == radius - 1)
+						PutPixel(window, r, g, b, x + _x, y + _y);
+				}
+			}
 		}
 	}
 }
