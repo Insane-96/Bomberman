@@ -8,7 +8,10 @@ namespace windowApp
 	{
 		private static Random r = new Random();
 
-		public static int Randomize(int n, int m) => r.Next(n, m);
+		public static int Randomize(int n, int m)
+		{
+			return r.Next(n, m);
+		}
 		public static int GetPos(int x, int y, int width) => (y * width) + x;
 
 		public static void PutPixel(Window window, byte r, byte g, byte b, int x, int y)

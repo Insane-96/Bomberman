@@ -13,36 +13,24 @@ namespace Bomberman
 	{
 		public int BombsPlaced;
 		public int BombsAvailable;
+		public int BombRadius;
 		public List<Bomb> Bombs;
 		public int X { get; private set; }
 		public int Y { get; private set; }
-		public bool justMoved { get; private set; }
+		public bool JustMoved { get; private set; }
+		public KeyMap KeyMap;
 
-		public Player(int x, int y, Map map, string filepath)
+		public Player(int x, int y, Map map, string filepath, KeyMap keyMap)
 		{
 			X = x;
 			Y = y;
 			BombsPlaced = 0;
-			BombsAvailable = 5;
+			BombsAvailable = 2;
+			BombRadius = 1;
+			KeyMap = keyMap;
+			X = 1;
+			Y = 1;
 
-			string file = System.IO.File.ReadAllText(filepath);
-			file = file.Replace("\r\n", ",");
-			bool playerStartFound = false;
-			for (int i = 0; i < file.Split(',').Length - 1; i++)
-			{
-				if (int.Parse(file.Split(',')[i]) == 1)
-				{
-					X = i % map.Width;
-					Y = i / map.Width;
-					playerStartFound = true;
-				}
-			}
-			if (!playerStartFound)
-			{
-				X = 1;
-				Y = 1;
-			}
-			
 			Bombs = new List<Bomb>();
 		}
 
@@ -63,17 +51,17 @@ namespace Bomberman
 
 		public void Move(int x, int y, Map map)
 		{
-			if (!justMoved && map.Tiles[Utils.GetPos(x, y, map.Width)] == Tile.TileType.None)
+			if (!JustMoved && map.Tiles[Utils.GetPos(x, y, map.Width)] == Tile.TileType.None)
 			{
 				X = x;
 				Y = y;
-				justMoved = true;
+				JustMoved = true;
 			}
 		}
 
 		public void CanMove()
 		{
-			justMoved = false;
+			JustMoved = false;
 		}
 
 		public void PrintPlayer(Window window, Map map)

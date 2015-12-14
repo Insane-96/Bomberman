@@ -1,10 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using windowApp;
 
 namespace Bomberman
@@ -21,19 +16,30 @@ namespace Bomberman
 		{
 			TileSize = tileSize;
 
-			string file = File.ReadAllText(filepath);
-			string[] tmp = file.Split('\r');
-			this.Height = tmp.Length - 1;
-			this.Width = tmp[0].Split(',').Length;
-			file = file.Replace("\r\n", ",");
-
-			Tiles = new Tile.TileType[file.Split(',').Length];
-			for (int i = 0; i < file.Split(',').Length - 1; i++)
+			this.Width = 49;
+			this.Height = 18;
+			Tiles = new Tile.TileType[Width * Height];
+			for (int y = 0; y < Height; y++)
 			{
-				if ((Tile.TileType) int.Parse(file.Split(',')[i]) == 0)
-					Tiles[i] = Tile.TileType.Wall;
-
+				for (int x = 0; x < Width; x++)
+				{
+					if (x == 0 || x == Width - 1 || y == 0 || y == Height - 1)
+					{
+						Tiles[Utils.GetPos(x, y, Width)] = Tile.TileType.Wall;
+					}
+					else if (x % 2 == 0 && y % 2 == 0)
+					{
+						Tiles[Utils.GetPos(x, y, Width)] = Tile.TileType.Wall;
+					}
+					else if(Utils.Randomize(0, 10) < 6)
+						Tiles[Utils.GetPos(x, y, Width)] = Tile.TileType.DestrWall;
+				}
 			}
+
+			Tiles[Utils.GetPos(1, 1, this.Width)] = Tile.TileType.None;
+			Tiles[Utils.GetPos(1, 2, this.Width)] = Tile.TileType.None;
+			Tiles[Utils.GetPos(2, 1, this.Width)] = Tile.TileType.None;
+
 		}
 	}
 }

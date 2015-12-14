@@ -17,25 +17,30 @@ namespace Bomberman
 
 			Map map = new Map(32, AppDomain.CurrentDomain.BaseDirectory + "mappaBomberman2.csv");
 
-			Player player = new Player(1, 1, map, AppDomain.CurrentDomain.BaseDirectory + "mappaBomberman.csv");
+			KeyMap player1KeyMap = new KeyMap(KeyCode.Left, KeyCode.Right, KeyCode.Up, KeyCode.Down, KeyCode.Space);
+
+			Player player = new Player(1, 1, map, AppDomain.CurrentDomain.BaseDirectory + "mappaBomberman.csv", player1KeyMap);
 			//Player player2 = new Player(22, 15);
 
 			while (window.opened)
 			{
+				Console.SetCursorPosition(0, 0);
+				Console.WriteLine("FPS: {0}            ", 60f / window.deltaTime / 60f);
+
 				Utils.Clear(window);
 				
-				if (window.GetKey(KeyCode.Left) && player.X > 0)
+				if (window.GetKey(player.KeyMap.Left) && player.X > 0)
 					player.Move(player.X - 1, player.Y, map);
-				else if (window.GetKey(KeyCode.Down) && player.Y < map.Height)
+				else if (window.GetKey(player.KeyMap.Down) && player.Y < map.Height)
 					player.Move(player.X, player.Y + 1, map);
-				else if (window.GetKey(KeyCode.Up) && player.Y > 0)
+				else if (window.GetKey(player.KeyMap.Up) && player.Y > 0)
 					player.Move(player.X, player.Y - 1, map);
-				else if (window.GetKey(KeyCode.Right) && player.X < map.Width)
+				else if (window.GetKey(player.KeyMap.Right) && player.X < map.Width)
 					player.Move(player.X + 1, player.Y, map);
 				else
 					player.CanMove();
 
-				if (window.GetKey(KeyCode.Space))
+				if (window.GetKey(player.KeyMap.PlaceBomb))
 				{
 					player.PlaceBomb(window, map);
 				}
@@ -45,8 +50,13 @@ namespace Bomberman
 				{
 					if (map.Tiles[i] == Tile.TileType.Wall)
 					{
-						Utils.DrawRectFilled(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 100, 51, 0);
-						Utils.DrawRect(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 131, 71, 0);
+						Utils.DrawRectFilled(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 104, 104, 104);
+						Utils.DrawRect(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 52, 52, 52);
+					}
+					else if (map.Tiles[i] == Tile.TileType.DestrWall)
+					{
+						Utils.DrawRectFilled(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 110, 50, 0);
+						Utils.DrawRect(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 55, 25, 0);
 					}
 				}
 
@@ -65,6 +75,9 @@ namespace Bomberman
 				//Console.SetCursorPosition(0, 0);
 				//Console.WriteLine("FPS: {0}         ", 60f / window.deltaTime / 60f);
 				window.Blit();
+
+				if (window.GetKey(KeyCode.Esc) && window.GetKey(KeyCode.Return))
+					window.opened = false;
 			}
 		}
 	}

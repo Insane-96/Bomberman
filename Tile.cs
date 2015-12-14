@@ -12,6 +12,7 @@ namespace Bomberman
 		{
 			None,
 			Wall,
+			DestrWall,
 			Bomb,
 		}
 
