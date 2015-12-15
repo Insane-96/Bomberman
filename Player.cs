@@ -14,6 +14,8 @@ namespace Bomberman
 		public int BombsPlaced;
 		public int BombsAvailable;
 		public int BombRadius;
+		public float BombFuseTime;
+		public bool SpinyBombs;
 		public List<Bomb> Bombs;
 		public int X { get; private set; }
 		public int Y { get; private set; }
@@ -25,11 +27,13 @@ namespace Bomberman
 			X = x;
 			Y = y;
 			BombsPlaced = 0;
-			BombsAvailable = 2;
+			BombsAvailable = 1;
 			BombRadius = 1;
+			BombFuseTime = 4f;
 			KeyMap = keyMap;
 			X = 1;
 			Y = 1;
+			SpinyBombs = false;
 
 			Bombs = new List<Bomb>();
 		}
@@ -38,7 +42,7 @@ namespace Bomberman
 		{
 			if (BombsAvailable > 0 && map.Tiles[Utils.GetPos(X, Y, map.Width)] == Tile.TileType.None)
 			{
-				Bombs.Add(new Bomb(X, Y, 3));
+				Bombs.Add(new Bomb(X, Y, BombFuseTime, window));
 
 				map.Tiles[Utils.GetPos(X, Y, map.Width)] = Tile.TileType.Bomb;
 

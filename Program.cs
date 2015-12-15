@@ -12,6 +12,7 @@ namespace Bomberman
 		static void Main(string[] args)
 		{
 			Window window = new Window(1024, 576, "Bomberman", PixelFormat.RGB);
+
 			window.SetIcon("bomb.ico", true);
 			window.CursorVisible = false;
 
@@ -28,7 +29,7 @@ namespace Bomberman
 				Console.WriteLine("FPS: {0}            ", 60f / window.deltaTime / 60f);
 
 				Utils.Clear(window);
-				
+
 				if (window.GetKey(player.KeyMap.Left) && player.X > 0)
 					player.Move(player.X - 1, player.Y, map);
 				else if (window.GetKey(player.KeyMap.Down) && player.Y < map.Height)
@@ -57,6 +58,7 @@ namespace Bomberman
 					{
 						Utils.DrawRectFilled(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 110, 50, 0);
 						Utils.DrawRect(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 55, 25, 0);
+						//Utils.DrawNumber(1, window, (i % map.Width) * map.TileSize + 8, (int)(i / map.Width) * map.TileSize + 8);
 					}
 				}
 

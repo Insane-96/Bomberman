@@ -33,7 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AivDraw">
+    <Reference Include="AivDraw, Version=0.4.5823.27704, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\aiv-draw\AivDraw\bin\Debug\AivDraw.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -51,6 +52,7 @@
     <Compile Include="Map.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProgressBar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="Utils.cs" />
