@@ -5,8 +5,7 @@ using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
-using Aiv.Draw;
-using windowApp;
+using Aiv.Draw.OpenGL;
 
 namespace Bomberman
 {

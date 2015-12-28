@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bomberman
 {
-	class Tile
+	static class Tile
 	{
 		public enum TileType
 		{
@@ -16,6 +16,6 @@ namespace Bomberman
 			Bomb,
 		}
 
-		public TileType type { get; private set; }
+		public static TileType type { get; private set; }
 	}
 }

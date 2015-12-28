@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
-using Aiv.Draw;
-using windowApp;
+using Aiv.Draw.OpenGL;
+//using Bomberman;
 
 namespace Bomberman
 {
@@ -11,35 +11,33 @@ namespace Bomberman
 	{
 		static void Main(string[] args)
 		{
-			Window window = new Window(1024, 576, "Bomberman", PixelFormat.RGB);
-
+			Window window = new Window(1024, 568, "Bomberman", PixelFormat.RGB);
+			Map map = new Map(32);
+			Game.window = window;
+			Game.map = map;
 			window.SetIcon("bomb.ico", true);
 			window.CursorVisible = false;
 
-			Map map = new Map(32, AppDomain.CurrentDomain.BaseDirectory + "mappaBomberman2.csv");
-
 			KeyMap player1KeyMap = new KeyMap(KeyCode.Left, KeyCode.Right, KeyCode.Up, KeyCode.Down, KeyCode.Space);
 
-			Player player = new Player(1, 1, map, AppDomain.CurrentDomain.BaseDirectory + "mappaBomberman.csv", player1KeyMap);
+			Player player = new Player(1, 1, map, player1KeyMap, "../../assets/player.png");
 			//Player player2 = new Player(22, 15);
 
 			while (window.opened)
 			{
 				Console.SetCursorPosition(0, 0);
-				Console.WriteLine("FPS: {0}            ", 60f / window.deltaTime / 60f);
+				Console.WriteLine("FPS: {0}            ", 1 / window.deltaTime);
 
-				Utils.Clear(window);
+				Utils.Clear(window, 0, 128, 0);
 
 				if (window.GetKey(player.KeyMap.Left) && player.X > 0)
-					player.Move(player.X - 1, player.Y, map);
-				else if (window.GetKey(player.KeyMap.Down) && player.Y < map.Height)
-					player.Move(player.X, player.Y + 1, map);
+					player.Move(Player.Direction.LEFT);
+				else if (window.GetKey(player.KeyMap.Down) && player.Y < map.Height * map.TileSize)
+					player.Move(Player.Direction.DOWN);
 				else if (window.GetKey(player.KeyMap.Up) && player.Y > 0)
-					player.Move(player.X, player.Y - 1, map);
-				else if (window.GetKey(player.KeyMap.Right) && player.X < map.Width)
-					player.Move(player.X + 1, player.Y, map);
-				else
-					player.CanMove();
+					player.Move(Player.Direction.UP);
+				else if (window.GetKey(player.KeyMap.Right) && player.X < map.Width * map.TileSize)
+					player.Move(Player.Direction.RIGHT);
 
 				if (window.GetKey(player.KeyMap.PlaceBomb))
 				{
@@ -58,7 +56,6 @@ namespace Bomberman
 					{
 						Utils.DrawRectFilled(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 110, 50, 0);
 						Utils.DrawRect(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 55, 25, 0);
-						//Utils.DrawNumber(1, window, (i % map.Width) * map.TileSize + 8, (int)(i / map.Width) * map.TileSize + 8);
 					}
 				}
 
@@ -74,8 +71,6 @@ namespace Bomberman
 				}
 				toRemove.Clear();
 
-				//Console.SetCursorPosition(0, 0);
-				//Console.WriteLine("FPS: {0}         ", 60f / window.deltaTime / 60f);
 				window.Blit();
 
 				if (window.GetKey(KeyCode.Esc) && window.GetKey(KeyCode.Return))

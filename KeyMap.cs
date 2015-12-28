@@ -1,5 +1,5 @@
 ﻿using System;
-using Aiv.Draw;
+using Aiv.Draw.OpenGL;
 
 namespace Bomberman
 {

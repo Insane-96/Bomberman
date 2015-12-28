@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using windowApp;
+//using windowApp;
 
 namespace Bomberman
 {
@@ -12,7 +12,7 @@ namespace Bomberman
 		public int TileSize { get; private set; }
 		public Tile.TileType[] Tiles { get; private set; }
 
-		public Map(int tileSize, string filepath)
+		public Map(int tileSize)
 		{
 			TileSize = tileSize;
 

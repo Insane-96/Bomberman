@@ -6,8 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
-using Aiv.Draw;
-using windowApp;
+using Aiv.Draw.OpenGL;
 
 namespace Bomberman
 {
@@ -38,12 +37,7 @@ namespace Bomberman
 			if (this.TimeToExplode > 0)
 			{
 				this.TimeToExplode -= window.deltaTime;
-				if ((int)(TimeToExplode * 100) % 100 < 50 && (int)(TimeToExplode * 100) > 100)
-					Utils.DrawCircle(window, (this.X * map.TileSize) + 16, (this.Y * map.TileSize) + 16, 11, 128, 128, 0);
-				else if ((int)(TimeToExplode * 100) % 100 >= 50 && (int)(TimeToExplode * 100) > 100)
-					Utils.DrawCircle(window, (this.X * map.TileSize) + 16, (this.Y * map.TileSize) + 16, 13, 128, 128, 0);
-				else if ((int)(TimeToExplode * 100) <= 100)
-					Utils.DrawCircle(window, (this.X * map.TileSize) + 16, (this.Y * map.TileSize) + 16, 13 + (100 - (int)(TimeToExplode * 100)) / 33, 128, 128, 0);
+				Utils.DrawSprite(Game.window, Game.bombSprite, this.X * map.TileSize, this.Y * map.TileSize, 0, 0, 32, 32);
 				TimerBar.SetValue((int)(TimeToExplode * 100), window);
 				return false;
 			}
@@ -64,7 +58,7 @@ namespace Bomberman
 
 		private void DestroyTiles(Window window, Map map, Player player)
 		{
-			for (int y = 0; y >= -player.BombRadius; y--)
+			for (int y = -1; y >= -player.BombRadius; y--)
 			{
 				Tile.TileType tile;
 				if (this.Y + y > 0)
@@ -91,7 +85,7 @@ namespace Bomberman
 						break;
 				}
 			}
-			for (int y = 0; y <= player.BombRadius; y++)
+			for (int y = 1; y <= player.BombRadius; y++)
 			{
 				Tile.TileType tile;
 				if (this.Y + y < map.Height)
@@ -115,7 +109,7 @@ namespace Bomberman
 						break;
 				}
 			}
-			for (int x = 0; x >= -player.BombRadius; x--)
+			for (int x = -1; x >= -player.BombRadius; x--)
 			{
 				Tile.TileType tile;
 				if (this.X + x > 0)
@@ -139,7 +133,7 @@ namespace Bomberman
 						break;
 				}
 			}
-			for (int x = 0; x <= player.BombRadius; x++)
+			for (int x = 1; x <= player.BombRadius; x++)
 			{
 				Tile.TileType tile;
 				if (this.X + x < map.Width)
@@ -163,6 +157,8 @@ namespace Bomberman
 						break;
 				}
 			}
+			Utils.DrawRectFilled(window, this.X * map.TileSize, this.Y * map.TileSize, 32, 32, 255, 128, 0);
+
 		}
 	}
 }
