@@ -11,7 +11,7 @@ namespace Bomberman
 	{
 		static void Main(string[] args)
 		{
-			Window window = new Window(1024, 568, "Bomberman", PixelFormat.RGB);
+			Window window = new Window(1024, 576, "Bomberman", PixelFormat.RGB);
 			Map map = new Map(32);
 			Game.window = window;
 			Game.map = map;
@@ -49,20 +49,18 @@ namespace Bomberman
 				{
 					if (map.Tiles[i] == Tile.TileType.Wall)
 					{
-						Utils.DrawRectFilled(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 104, 104, 104);
-						Utils.DrawRect(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 52, 52, 52);
+						Utils.DrawSprite(window, Game.WallSprite, (i % map.Width) * map.TileSize + map.Scroll, (int)(i / map.Width) * map.TileSize, 0, 0, map.TileSize, map.TileSize);
 					}
 					else if (map.Tiles[i] == Tile.TileType.DestrWall)
 					{
-						Utils.DrawRectFilled(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 110, 50, 0);
-						Utils.DrawRect(window, (i % map.Width) * map.TileSize, (int)(i / map.Width) * map.TileSize, map.TileSize, map.TileSize, 55, 25, 0);
+						Utils.DrawSprite(window, Game.DestrWallSprite, (i % map.Width) * map.TileSize + map.Scroll, (int)(i / map.Width) * map.TileSize, 0, 0, map.TileSize, map.TileSize);
 					}
 				}
 
 				List<Bomb> toRemove = new List<Bomb>();
 				foreach (Bomb bomb in player.Bombs)
 				{
-					if (bomb.Fuse(window, map, player))
+					if (bomb.Fuse(player))
 						toRemove.Add(bomb);
 				}
 				foreach (var bombToRemove in toRemove)

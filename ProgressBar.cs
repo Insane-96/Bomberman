@@ -57,7 +57,7 @@ namespace Bomberman
 
 		public int value;
 
-		public void SetValue(int value, Window window)
+		public void SetValue(int value, Object attach, Window window)
 		{
 			this.value = value;
 			Draw(window);
@@ -68,9 +68,9 @@ namespace Bomberman
 			for (int x = 0; x < Width; x++)
 			{
 				if (x < Width / (float)(Maximum - Minimum) * value)
-					Utils.DrawVertLine(window, PosX * 32 + x, PosY * 32, Height, FColorR, FColorG, FColorB);
+					Utils.DrawVertLine(window, PosX + x + Game.map.Scroll, PosY, Height, FColorR, FColorG, FColorB);
 				else
-					Utils.DrawVertLine(window, PosX * 32 + x, PosY * 32, Height, BColorR, BColorG, BColorB);
+					Utils.DrawVertLine(window, PosX + x + Game.map.Scroll, PosY, Height, BColorR, BColorG, BColorB);
 			}
 		}
 

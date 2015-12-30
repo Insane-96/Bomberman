@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
+
 //using windowApp;
 
 namespace Bomberman
@@ -11,6 +13,7 @@ namespace Bomberman
 		public int Height { get; private set; }
 		public int TileSize { get; private set; }
 		public Tile.TileType[] Tiles { get; private set; }
+		public int Scroll { get; private set; }
 
 		public Map(int tileSize)
 		{
@@ -31,15 +34,25 @@ namespace Bomberman
 					{
 						Tiles[Utils.GetPos(x, y, Width)] = Tile.TileType.Wall;
 					}
-					else if(Utils.Randomize(0, 10) < 6)
+					else if (Utils.Randomize(0, 10) < 1)
 						Tiles[Utils.GetPos(x, y, Width)] = Tile.TileType.DestrWall;
 				}
 			}
 
+			this.Scroll = 0;
 			Tiles[Utils.GetPos(1, 1, this.Width)] = Tile.TileType.None;
 			Tiles[Utils.GetPos(1, 2, this.Width)] = Tile.TileType.None;
 			Tiles[Utils.GetPos(2, 1, this.Width)] = Tile.TileType.None;
 
+		}
+
+		public void checkScroll(Player player)
+		{
+			int visibleTiles = Game.window.width / this.TileSize;
+			if (player.X >= visibleTiles / 2 * this.TileSize && player.X <= (this.Width * this.TileSize) - (visibleTiles / 2 * this.TileSize))
+			{
+				this.Scroll = visibleTiles / 2 * this.TileSize - player.X;
+			}
 		}
 	}
 }

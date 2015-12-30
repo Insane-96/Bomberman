@@ -49,7 +49,7 @@ namespace Bomberman
 		{
 			if (BombsAvailable > 0 && map.Tiles[Utils.GetPos(X / map.TileSize, Y / map.TileSize, map.Width)] == Tile.TileType.None)
 			{
-				Bombs.Add(new Bomb(X / map.TileSize, Y / map.TileSize, BombFuseTime, window));
+				Bombs.Add(new Bomb(X / map.TileSize, Y / map.TileSize, BombFuseTime));
 
 				map.Tiles[Utils.GetPos(X / map.TileSize, Y / map.TileSize, map.Width)] = Tile.TileType.Bomb;
 
@@ -62,7 +62,7 @@ namespace Bomberman
 		{
 			Window window = Game.window;
 			Map map = Game.map;
-			if (this.X % 32 >= 15/* - (int)(MovSpeed * window.deltaTime)*/ && this.X % 32 <= 17 /*+ (int)(MovSpeed * window.deltaTime)*/)
+			if (this.X % 32 >= 15 && this.X % 32 <= 17)
 			{
 				if (direction == Direction.UP && map.Tiles[Utils.GetPos(this.X / map.TileSize, (this.Y - (int)(MovSpeed * window.deltaTime) - 16) / map.TileSize, map.Width)] == Tile.TileType.None)
 				{
@@ -78,18 +78,12 @@ namespace Bomberman
 				if (direction == Direction.UP && map.Tiles[Utils.GetPos(this.X / map.TileSize, (this.Y - (int)(MovSpeed * window.deltaTime) - 16) / map.TileSize, map.Width)] == Tile.TileType.None)
 				{
 					this.Y -= (int)(MovSpeed * window.deltaTime);
-					if (this.X % 32 >= 5 && this.X % 32 < 15)
-						this.X += (int)(MovSpeed * window.deltaTime);
-					else if (this.X % 32 <= 27 && this.X % 32 > 17)
-						this.X -= (int)(MovSpeed * window.deltaTime);
+					xMoveDiagonally();
 				}
 				else if (direction == Direction.DOWN && map.Tiles[Utils.GetPos(this.X / map.TileSize, (this.Y + (int)(MovSpeed * window.deltaTime) + 16) / map.TileSize, map.Width)] == Tile.TileType.None)
 				{
 					this.Y += (int)(MovSpeed * window.deltaTime);
-					if (this.X % 32 >= 6 && this.X % 32 < 15)
-						this.X += (int)(MovSpeed * window.deltaTime);
-					else if (this.X % 32 <= 26 && this.X % 32 > 17)
-						this.X -= (int)(MovSpeed * window.deltaTime);
+					xMoveDiagonally();
 				}
 			}
 			if (this.Y % 32 >= 15 && this.Y % 32 <= 17)
@@ -108,27 +102,38 @@ namespace Bomberman
 				if (direction == Direction.RIGHT && map.Tiles[Utils.GetPos((this.X + (int)(MovSpeed * window.deltaTime) + 16) / map.TileSize, this.Y / map.TileSize, map.Width)] == Tile.TileType.None)
 				{
 					this.X += (int)(MovSpeed * window.deltaTime);
-					if (this.Y % 32 >= 5 && this.Y % 32 < 15)
-						this.Y += (int)(MovSpeed * window.deltaTime);
-					else if (this.Y % 32 <= 27 && this.Y % 32 > 17)
-						this.Y -= (int)(MovSpeed * window.deltaTime);
+					yMoveDiagonally();
 				}
 				else if (direction == Direction.LEFT && map.Tiles[Utils.GetPos((this.X - (int)(MovSpeed * window.deltaTime) - 16) / map.TileSize, this.Y / map.TileSize, map.Width)] == Tile.TileType.None)
 				{
 					this.X -= (int)(MovSpeed * window.deltaTime);
-					if (this.Y % 32 >= 6 && this.Y % 32 < 15)
-						this.Y += (int)(MovSpeed * window.deltaTime);
-					else if (this.Y % 32 <= 26 && this.Y % 32 > 17)
-						this.Y -= (int)(MovSpeed * window.deltaTime);
+					yMoveDiagonally();
 				}
 			}
-			Console.WriteLine(this.X + "     ");
-			Console.WriteLine(this.Y + "     ");
+			Game.map.checkScroll(this);
+			//Console.WriteLine(this.X + "     ");
+			//Console.WriteLine(this.Y + "     ");
+		}
+
+		private void yMoveDiagonally()
+		{
+			if (this.Y % 32 >= 5 && this.Y % 32 < 15)
+				this.Y += (int)(MovSpeed * Game.window.deltaTime);
+			else if (this.Y % 32 <= 27 && this.Y % 32 > 17)
+				this.Y -= (int)(MovSpeed * Game.window.deltaTime);
+		}
+
+		private void xMoveDiagonally()
+		{
+			if (this.X % 32 >= 5 && this.X % 32 < 15)
+				this.X += (int)(MovSpeed * Game.window.deltaTime);
+			else if (this.X % 32 <= 27 && this.X % 32 > 17)
+				this.X -= (int)(MovSpeed * Game.window.deltaTime);
 		}
 
 		public void PrintPlayer(Window window, Map map)
 		{
-			Utils.DrawSprite(window, sprite, X - 16, Y - 16, 0, 0, 32, 32);
+			Utils.DrawSprite(window, sprite, X - 16 + map.Scroll, Y - 16, 0, 0, 32, 32);
 		}
 	}
 }

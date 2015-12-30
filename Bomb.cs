@@ -24,21 +24,23 @@ namespace Bomberman
 			Y = -1;
 		}*/
 
-		public Bomb(int x, int y, float timeToExplode, Window window)
+		public Bomb(int x, int y, float timeToExplode)
 		{
 			TimeToExplode = timeToExplode;
 			X = x;
 			Y = y;
-			TimerBar = new ProgressBar(0, (int)(TimeToExplode * 100), (int)(TimeToExplode * 100), X, Y, 32, 3, 200, 200, 0, 128, 0, 0, window);
+			TimerBar = new ProgressBar(0, (int)(TimeToExplode * 100), (int)(TimeToExplode * 100), X * Game.map.TileSize, Y * Game.map.TileSize, 32, 3, 200, 200, 0, 128, 0, 0, Game.window);
 		}
 
-		public bool Fuse(Window window, Map map, Player player)
+		public bool Fuse(Player player)
 		{
+			Window window = Game.window;
+			Map map = Game.map;
 			if (this.TimeToExplode > 0)
 			{
 				this.TimeToExplode -= window.deltaTime;
-				Utils.DrawSprite(Game.window, Game.bombSprite, this.X * map.TileSize, this.Y * map.TileSize, 0, 0, 32, 32);
-				TimerBar.SetValue((int)(TimeToExplode * 100), window);
+				Utils.DrawSprite(window, Game.BombSprite, this.X * map.TileSize + map.Scroll, this.Y * map.TileSize, 0, 0, 32, 32);
+				TimerBar.SetValue((int)(TimeToExplode * 100), this, window);
 				return false;
 			}
 			else
@@ -67,7 +69,7 @@ namespace Bomberman
 					break;
 
 				if (tile == Tile.TileType.DestrWall || tile == Tile.TileType.None)
-					Utils.DrawRectFilled(window, (this.X * map.TileSize), ((this.Y + y) * map.TileSize), 32, 32, 255, 128, 0);
+					Utils.DrawRectFilled(window, (this.X * map.TileSize) + map.Scroll, ((this.Y + y) * map.TileSize), 32, 32, 255, 128, 0);
 				else if (tile == Tile.TileType.Bomb)
 					foreach (var bomb in player.Bombs)
 					{
@@ -93,7 +95,7 @@ namespace Bomberman
 				else
 					break;
 				if (tile == Tile.TileType.DestrWall || tile == Tile.TileType.None)
-					Utils.DrawRectFilled(window, (this.X * map.TileSize), ((this.Y + y) * map.TileSize), 32, 32, 255, 128, 0);
+					Utils.DrawRectFilled(window, (this.X * map.TileSize) + map.Scroll, ((this.Y + y) * map.TileSize), 32, 32, 255, 128, 0);
 				else if (tile == Tile.TileType.Bomb)
 					foreach (var bomb in player.Bombs)
 					{
@@ -117,7 +119,7 @@ namespace Bomberman
 				else
 					break;
 				if (tile == Tile.TileType.DestrWall || tile == Tile.TileType.None)
-					Utils.DrawRectFilled(window, ((this.X + x) * map.TileSize), (this.Y * map.TileSize), 32, 32, 255, 128, 0);
+					Utils.DrawRectFilled(window, ((this.X + x) * map.TileSize) + map.Scroll, (this.Y * map.TileSize), 32, 32, 255, 128, 0);
 				else if (tile == Tile.TileType.Bomb)
 					foreach (var bomb in player.Bombs)
 					{
@@ -141,7 +143,7 @@ namespace Bomberman
 				else
 					break;
 				if (tile == Tile.TileType.DestrWall || tile == Tile.TileType.None)
-					Utils.DrawRectFilled(window, ((this.X + x) * map.TileSize), (this.Y * map.TileSize), 32, 32, 255, 128, 0);
+					Utils.DrawRectFilled(window, ((this.X + x) * map.TileSize) + map.Scroll, (this.Y * map.TileSize), 32, 32, 255, 128, 0);
 				else if (tile == Tile.TileType.Bomb)
 					foreach (var bomb in player.Bombs)
 					{
@@ -157,7 +159,7 @@ namespace Bomberman
 						break;
 				}
 			}
-			Utils.DrawRectFilled(window, this.X * map.TileSize, this.Y * map.TileSize, 32, 32, 255, 128, 0);
+			Utils.DrawRectFilled(window, this.X * map.TileSize + map.Scroll, this.Y * map.TileSize, 32, 32, 255, 128, 0);
 
 		}
 	}
