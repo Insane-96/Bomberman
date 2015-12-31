@@ -25,7 +25,7 @@ namespace Bomberman
 		public List<Bomb> Bombs;
 		public int X { get; private set; }
 		public int Y { get; private set; }
-		public int MovSpeed { get; private set; }
+		public int MovSpeed;
 		public KeyMap KeyMap;
 		private Sprite sprite;
 
@@ -34,8 +34,8 @@ namespace Bomberman
 			X = x * map.TileSize + map.TileSize / 2;
 			Y = y * map.TileSize + map.TileSize / 2;
 			BombsPlaced = 0;
-			BombsAvailable = 3;
-			BombRadius = 4;
+			BombsAvailable = 1;
+			BombRadius = 1;
 			BombFuseTime = 4f;
 			KeyMap = keyMap;
 			SpinyBombs = false;
@@ -111,8 +111,11 @@ namespace Bomberman
 				}
 			}
 			Game.map.checkScroll(this);
-			//Console.WriteLine(this.X + "     ");
-			//Console.WriteLine(this.Y + "     ");
+			if (map.PowerUps[Utils.GetPos(this.X / map.TileSize, this.Y / map.TileSize, map.Width)] != null)
+			{
+				map.PowerUps[Utils.GetPos(this.X / map.TileSize, this.Y / map.TileSize, map.Width)].PickUp(this);
+				map.PowerUps[Utils.GetPos(this.X / map.TileSize, this.Y / map.TileSize, map.Width)] = null;
+			}
 		}
 
 		private void yMoveDiagonally()

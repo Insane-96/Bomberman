@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,8 +74,12 @@ namespace Bomberman
 					{
 						if (bomb.X == this.X && bomb.Y == this.Y + y)
 							bomb.TimeToExplode = 0f;
-
 					}
+
+				if (map.PowerUps[Utils.GetPos(this.X, this.Y + y, map.Width)] != null && tile == Tile.TileType.None)
+				{
+					map.PowerUps[Utils.GetPos(this.X, this.Y + y, map.Width)] = null;
+				}
 				if (tile == Tile.TileType.DestrWall || tile == Tile.TileType.Wall)
 				{
 					if (tile == Tile.TileType.DestrWall)
@@ -103,10 +106,17 @@ namespace Bomberman
 							bomb.TimeToExplode = 0f;
 
 					}
+
+				if (map.PowerUps[Utils.GetPos(this.X, this.Y + y, map.Width)] != null && tile == Tile.TileType.None)
+				{
+					map.PowerUps[Utils.GetPos(this.X, this.Y + y, map.Width)] = null;
+				}
 				if (tile == Tile.TileType.DestrWall || tile == Tile.TileType.Wall)
 				{
 					if (tile == Tile.TileType.DestrWall)
+					{
 						map.Tiles[Utils.GetPos(this.X, this.Y + y, map.Width)] = Tile.TileType.None;
+					}
 					if (!player.SpinyBombs || tile == Tile.TileType.Wall)
 						break;
 				}
@@ -127,10 +137,17 @@ namespace Bomberman
 							bomb.TimeToExplode = 0f;
 
 					}
+
+				if (map.PowerUps[Utils.GetPos(this.X + x, this.Y, map.Width)] != null && tile == Tile.TileType.None)
+				{
+					map.PowerUps[Utils.GetPos(this.X + x, this.Y, map.Width)] = null;
+				}
 				if (tile == Tile.TileType.DestrWall || tile == Tile.TileType.Wall)
 				{
 					if (tile == Tile.TileType.DestrWall)
+					{
 						map.Tiles[Utils.GetPos(this.X + x, this.Y, map.Width)] = Tile.TileType.None;
+					}
 					if (!player.SpinyBombs || tile == Tile.TileType.Wall)
 						break;
 				}
@@ -151,10 +168,17 @@ namespace Bomberman
 							bomb.TimeToExplode = 0f;
 
 					}
+
+				if (map.PowerUps[Utils.GetPos(this.X + x, this.Y, map.Width)] != null && tile == Tile.TileType.None)
+				{
+					map.PowerUps[Utils.GetPos(this.X + x, this.Y, map.Width)] = null;
+				}
 				if (tile == Tile.TileType.DestrWall || tile == Tile.TileType.Wall)
 				{
 					if (tile == Tile.TileType.DestrWall)
+					{
 						map.Tiles[Utils.GetPos(this.X + x, this.Y, map.Width)] = Tile.TileType.None;
+					}
 					if (!player.SpinyBombs || tile == Tile.TileType.Wall)
 						break;
 				}
