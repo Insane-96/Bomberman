@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using Aiv.Draw.OpenGL;
-
-namespace Bomberman
+﻿namespace Bomberman
 {
 	class ProgressBar
 	{
@@ -57,24 +48,24 @@ namespace Bomberman
 
 		public int value;
 
-		public void SetValue(int value, Object attach, Window window)
+		public void SetValue(int value)
 		{
 			this.value = value;
-			Draw(window);
+			Draw();
 		}
 
-		private void Draw(Window window)
+		private void Draw()
 		{
 			for (int x = 0; x < Width; x++)
 			{
 				if (x < Width / (float)(Maximum - Minimum) * value)
-					Utils.DrawVertLine(window, PosX + x + Game.map.Scroll, PosY, Height, FColorR, FColorG, FColorB);
+					Utils.DrawVertLine(Game.window, PosX + x + Game.map.Scroll, PosY, Height, FColorR, FColorG, FColorB);
 				else
-					Utils.DrawVertLine(window, PosX + x + Game.map.Scroll, PosY, Height, BColorR, BColorG, BColorB);
+					Utils.DrawVertLine(Game.window, PosX + x + Game.map.Scroll, PosY, Height, BColorR, BColorG, BColorB);
 			}
 		}
 
-		public ProgressBar(int minimum, int maximum, int startingValue, int posX, int posY, int width, int height, byte fR, byte fG, byte fB, byte bR, byte bG, byte bB, Window window)
+		public ProgressBar(int minimum, int maximum, int startingValue, int posX, int posY, int width, int height, byte fR, byte fG, byte fB, byte bR, byte bG, byte bB)
 		{
 			this.Minimum = minimum;
 			this.Maximum = maximum;
@@ -89,7 +80,7 @@ namespace Bomberman
 			this.BColorR = bR;
 			this.BColorG = bG;
 			this.BColorB = bB;
-			Draw(window);
+			Draw();
 		}
 
 	}

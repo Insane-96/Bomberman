@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Configuration;
-using System.Text;
-using System.Threading.Tasks;
-using Aiv.Draw.OpenGL;
+﻿using Aiv.Draw.OpenGL;
 
 namespace Bomberman
 {
