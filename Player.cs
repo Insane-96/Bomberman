@@ -25,10 +25,10 @@ namespace Bomberman
 		public KeyMap KeyMap;
 		private Sprite sprite;
 
-		public Player(int x, int y, Map map, KeyMap keyMap, string spritePath)
+		public Player(int x, int y, KeyMap keyMap, string spritePath)
 		{
-			X = x * map.TileSize + map.TileSize / 2;
-			Y = y * map.TileSize + map.TileSize / 2;
+			X = x * Game.map.TileSize + Game.map.TileSize / 2;
+			Y = y * Game.map.TileSize + Game.map.TileSize / 2;
 			BombsPlaced = 0;
 			BombsAvailable = 1;
 			BombRadius = 1;
@@ -112,28 +112,41 @@ namespace Bomberman
 					yMoveDiagonally();
 				}
 			}
-			Game.map.CheckScroll(this);
 			if (map.PowerUps[Utils.GetPos(this.X / map.TileSize, this.Y / map.TileSize, map.Width)] != null)
 			{
 				map.PowerUps[Utils.GetPos(this.X / map.TileSize, this.Y / map.TileSize, map.Width)].PickUp(this);
 				map.PowerUps[Utils.GetPos(this.X / map.TileSize, this.Y / map.TileSize, map.Width)] = null;
 			}
+
+			Game.map.CheckScroll(this);
 		}
 
 		private void yMoveDiagonally()
 		{
 			if (this.Y % 32 >= 5 && this.Y % 32 < 15)
-				this.Y += (int)(MovSpeed * Game.window.deltaTime);
+				if (this.Y + (int)(MovSpeed * Game.window.deltaTime) % 32 >= 15)
+					this.Y = this.Y - this.Y % 32 + 16;
+				else
+					this.Y += (int)(MovSpeed * Game.window.deltaTime);
 			else if (this.Y % 32 <= 27 && this.Y % 32 > 17)
-				this.Y -= (int)(MovSpeed * Game.window.deltaTime);
+				if (this.Y - (int)(MovSpeed * Game.window.deltaTime) % 32 <= 17)
+					this.Y = this.Y - this.Y % 32 + 16;
+				else
+					this.Y -= (int)(MovSpeed * Game.window.deltaTime);
 		}
 
 		private void xMoveDiagonally()
 		{
 			if (this.X % 32 >= 5 && this.X % 32 < 15)
-				this.X += (int)(MovSpeed * Game.window.deltaTime);
+				if (this.X + (int)(MovSpeed * Game.window.deltaTime) % 32 >= 15)
+					this.X = this.X - this.X % 32 + 16;
+				else
+					this.X += (int)(MovSpeed * Game.window.deltaTime);
 			else if (this.X % 32 <= 27 && this.X % 32 > 17)
-				this.X -= (int)(MovSpeed * Game.window.deltaTime);
+				if (this.X - (int)(MovSpeed * Game.window.deltaTime) % 32 <= 17)
+					this.X = this.X - this.X % 32 + 16;
+				else
+					this.X -= (int)(MovSpeed * Game.window.deltaTime);
 		}
 
 		public void Draw()
