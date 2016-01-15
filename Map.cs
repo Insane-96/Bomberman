@@ -1,5 +1,7 @@
 ﻿using System;
-using Aiv.Draw.OpenGL;
+using System.Runtime.CompilerServices;
+using System.Windows.Forms.VisualStyles;
+using Aiv.Fast2D;
 
 //using windowApp;
 
@@ -17,79 +19,100 @@ namespace Bomberman
 		public int Width { get; private set; }
 		public int Height { get; private set; }
 		public int TileSize { get; private set; }
+		private Sprite[] Sprites;
 		public Map.TileType[] Tiles { get; private set; }
-		public PowerUp[] PowerUps; 
+		public PowerUp[] PowerUps;
+		public Sprite[] PowerUpSprites;
 		public int Scroll { get; private set; }
 
 		public Map(int tileSize)
 		{
-			TileSize = tileSize;
-
-			this.Width = 49;
-			this.Height = 17;
-			Tiles = new Map.TileType[Width * Height];
-			PowerUps = new PowerUp[Width * Height];
-			for (int y = 0; y < Height; y++)
+			try
 			{
-				for (int x = 0; x < Width; x++)
+				TileSize = tileSize;
+
+				this.Width = 49;
+				this.Height = 17;
+				Sprites = new Sprite[Width * Height];
+				Tiles = new Map.TileType[Width * Height];
+				PowerUps = new PowerUp[Width * Height];
+				PowerUpSprites = new Sprite[Width * Height];
+				for (int y = 0; y < Height; y++)
 				{
-					if (x == 0 || x == Width - 1 || y == 0 || y == Height - 1)
+					for (int x = 0; x < Width; x++)
 					{
-						Tiles[Utils.GetPos(x, y, Width)] = Map.TileType.Wall;
-					}
-					else if (x % 2 == 0 && y % 2 == 0)
-					{
-						Tiles[Utils.GetPos(x, y, Width)] = Map.TileType.Wall;
-					}
-					else if (Utils.Randomize(0, 100) < 25)
-					{
-						Tiles[Utils.GetPos(x, y, Width)] = Map.TileType.DestrWall;
-						if (Utils.Randomize(0, 100) < 5)
+						if (x == 0 || x == Width - 1 || y == 0 || y == Height - 1)
 						{
-							PowerUps[Utils.GetPos(x, y, this.Width)] = new PowerUp(PowerUp.PowerUpsList[Utils.Randomize(0, Enum.GetNames(typeof(PowerUp.PowerUps)).Length)]);
+							Tiles[Utils.GetPos(x, y, Width)] = Map.TileType.Wall;
 						}
+						else if (x % 2 == 0 && y % 2 == 0)
+						{
+							Tiles[Utils.GetPos(x, y, Width)] = Map.TileType.Wall;
+						}
+						else if (Utils.Randomize(0, 100) < 25)
+						{
+							Tiles[Utils.GetPos(x, y, Width)] = Map.TileType.DestrWall;
+							if (Utils.Randomize(0, 100) < 5)
+							{
+								PowerUps[Utils.GetPos(x, y, this.Width)] =
+									new PowerUp(PowerUp.PowerUpsList[Utils.Randomize(0, Enum.GetNames(typeof(PowerUp.PowerUps)).Length)]);
+								PowerUpSprites[Utils.GetPos(x, y, this.Width)] = new Sprite(32, 32);
+							}
+						}
+						Sprites[Utils.GetPos(x, y, this.Width)] = new Sprite(32, 32);
+						Sprites[Utils.GetPos(x, y, this.Width)].position.X = x * 32;
+						Sprites[Utils.GetPos(x, y, this.Width)].position.Y = y * 32;
 					}
 				}
+
+				this.Scroll = 0;
+				Tiles[Utils.GetPos(1, 1, this.Width)] = Map.TileType.None;
+				Tiles[Utils.GetPos(1, 2, this.Width)] = Map.TileType.None;
+				Tiles[Utils.GetPos(2, 1, this.Width)] = Map.TileType.None;
+				PowerUps[Utils.GetPos(1, 1, this.Width)] = null;
+				PowerUps[Utils.GetPos(1, 2, this.Width)] = null;
+				PowerUps[Utils.GetPos(2, 1, this.Width)] = null;
 			}
-
-			this.Scroll = 0;
-			Tiles[Utils.GetPos(1, 1, this.Width)] = Map.TileType.None;
-			Tiles[Utils.GetPos(1, 2, this.Width)] = Map.TileType.None;
-			Tiles[Utils.GetPos(2, 1, this.Width)] = Map.TileType.None;
-			PowerUps[Utils.GetPos(1, 1, this.Width)] = null;
-			PowerUps[Utils.GetPos(1, 2, this.Width)] = null;
-			PowerUps[Utils.GetPos(2, 1, this.Width)] = null;
-
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+			}
 		}
 
 		public void CheckScroll(Player player)
 		{
-			int visibleTiles = Game.window.width / this.TileSize;
+			int visibleTiles = Game.window.Width / this.TileSize;
 			if (player.X >= visibleTiles / 2 * this.TileSize && player.X <= (this.Width * this.TileSize) - (visibleTiles / 2 * this.TileSize))
 			{
 				this.Scroll = visibleTiles / 2 * this.TileSize - player.X;
+			}
+			for (int i = 0; i < this.Tiles.Length; i++)
+			{
+				this.Sprites[i].position.X = (i % Width) * TileSize + Scroll;
+				//Console.SetCursorPosition(0, 6);
+				//Console.WriteLine("Scroll {this.Scroll}");
 			}
 		}
 
 		public void Draw()
 		{
 			Map map = Game.map;
-			Window window = Game.window;
+
 			for (int i = 0; i < map.Tiles.Length; i++)
 			{
-				if (map.Tiles[i] == Map.TileType.Wall)
+				if (map.Tiles[i] == TileType.Wall)
 				{
-					Utils.DrawSprite(window, Game.WallSprite, (i % map.Width) * map.TileSize + map.Scroll, (int)(i / map.Width) * map.TileSize, 0, 0, map.TileSize, map.TileSize);
+					Sprites[i].DrawTexture(Game.WallTexture);
 				}
-				else if (map.Tiles[i] == Map.TileType.DestrWall)
+				else if (map.Tiles[i] == TileType.DestrWall)
 				{
-					Utils.DrawSprite(window, Game.DestrWallSprite, (i % map.Width) * map.TileSize + map.Scroll, (int)(i / map.Width) * map.TileSize, 0, 0, map.TileSize, map.TileSize);
-					if (map.PowerUps[i] != null)
-						Utils.DrawFilledCircle(window, (i % map.Width) * map.TileSize + map.Scroll + 16, (int)(i / map.Width) * map.TileSize + 16, 4, 40, 40, 0);
+					Sprites[i].DrawTexture(Game.DestrWallTexture);
 				}
-				else if (map.Tiles[i] == Map.TileType.None && map.PowerUps[i] != null)
+				else if (map.Tiles[i] == TileType.None && map.PowerUps[i] != null)
 				{
-					Utils.DrawSprite(window, map.PowerUps[i].sprite, (i % map.Width) * map.TileSize + map.Scroll, (int)(i / map.Width) * map.TileSize, 0, 0, 32, 32);
+					PowerUpSprites[i].position.X = (i % Width) * TileSize + Scroll;
+					PowerUpSprites[i].position.Y = (i / Width) * TileSize;
+					PowerUpSprites[i].DrawTexture(Game.PowerUpTexture);
 				}
 			}
 		}

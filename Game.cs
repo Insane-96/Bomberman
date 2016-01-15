@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Runtime.CompilerServices;
-using Aiv.Draw.OpenGL;
+using Aiv.Fast2D;
 
 namespace Bomberman
 {
@@ -10,11 +8,16 @@ namespace Bomberman
 	{
 		public static Window window;
 		public static Map map;
-		public static Sprite BombSprite = new Sprite("../../assets/bomb.png");
-		public static Sprite WallSprite = new Sprite("../../assets/wall.png");
-		public static Sprite DestrWallSprite = new Sprite("../../assets/destrWall.png");
-		public static Sprite EnemySprite = new Sprite("../../assets/enemy.png");
+		public static Texture BombTexture;
+		public static Texture WallTexture;
+		public static Texture DestrWallTexture;
+		public static Texture EnemyTexture;
+		public static Texture PowerUpTexture;
 		public static Player player;
+		public static Texture PlayerTexture;
+
+		public static Texture BackgroundTexture;
+		public static Sprite BackgroundSprite;
 
 		public static Enemy[] EnemiesList;
 
@@ -25,17 +28,30 @@ namespace Bomberman
 
 		private static void init()
 		{
-			//init window
-			window = new Window(976, 544, "Bomberman", PixelFormat.RGB);
-			window.SetIcon("../../assets/bomb.ico", true);
-			window.CursorVisible = false;
+			////init window
+			window = new Window(976, 544, "Bomberman");
+
+			PlayerTexture = new Texture("../../../Bomberman/assets/player.png");
+			BombTexture = new Texture("../../assets/bomb.png");
+			WallTexture = new Texture("../../assets/wall.png");
+			DestrWallTexture = new Texture("../../assets/destrWall.png");
+			EnemyTexture = new Texture("../../assets/enemy.png");
+			PowerUpTexture = new Texture("../../assets/defaultPowerUp.png");
+
+			BackgroundTexture = new Texture(1, 1);
+			BackgroundTexture.Bitmap[0] = 0;
+			BackgroundTexture.Bitmap[1] = 115;
+			BackgroundTexture.Bitmap[2] = 0;
+			BackgroundTexture.Bitmap[3] = 255;
+			BackgroundTexture.Update();
+			BackgroundSprite = new Sprite(976, 544);
 
 			//init map
 			map = new Map(32);
 
 			//init player's key map and player
 			KeyMap player1KeyMap = new KeyMap(KeyCode.Left, KeyCode.Right, KeyCode.Up, KeyCode.Down, KeyCode.Space);
-			player = new Player(1, 1, player1KeyMap, "../../assets/player.png");
+			player = new Player(1, 1, player1KeyMap);
 
 			//init enemies
 			EnemiesList = new Enemy[5];
@@ -49,6 +65,7 @@ namespace Bomberman
 				} while (map.Tiles[Utils.GetPos(rX, rY, map.Width)] != Map.TileType.None);
 				EnemiesList[i] = new Enemy(1, Utils.Randomize(70, 81), rX, rY);
 			}
+
 		}
 
 		public static void Update()
@@ -56,8 +73,7 @@ namespace Bomberman
 			Console.SetCursorPosition(0, 0);
 			Console.WriteLine("FPS: {0}            ", 1 / Game.window.deltaTime);
 
-			//Clear window
-			Utils.Clear(window, 31, 139, 0);
+			BackgroundSprite.DrawTexture(BackgroundTexture, 0, 0);
 
 			player.checkMovement();
 
@@ -83,11 +99,12 @@ namespace Bomberman
 			toRemove.Clear();
 
 			//Draw
-			Game.window.Blit();
+			Game.window.Update();
 
 			//Esc + Return (Enter) closes the game
 			if (Game.window.GetKey(KeyCode.Esc) && Game.window.GetKey(KeyCode.Return))
 				Game.window.opened = false;
+
 		}
 
 		public static void DrawEnemies()
@@ -100,35 +117,8 @@ namespace Bomberman
 
 		public static void EnemiesAI()
 		{
-			//double[] directions = new double[Enum.GetValues(typeof(Enemy.Direction)).Length];
 			foreach (var enemy in EnemiesList)
 			{
-				//if (map.Tiles[Utils.GetPos(enemy.X / map.TileSize, (enemy.Y - (int)(enemy.MovSpeed * window.deltaTime) - 15) / map.TileSize, map.Width)] == Map.TileType.None)
-				//{
-				//	directions[(int)Enemy.Direction.UP] = -Math.Sqrt(Math.Pow(player.X - enemy.X, 2) + Math.Pow(player.Y - enemy.Y - (int)(enemy.MovSpeed * window.deltaTime), 2));
-				//	//Utils.DrawRectFilled(window, enemy.X - 16, enemy.Y - 16 - (int)(enemy.MovSpeed * window.deltaTime), 32, 32, 128, 0, 218);
-				//}
-				//if (map.Tiles[Utils.GetPos((enemy.X + (int)(enemy.MovSpeed * window.deltaTime) + 15) / map.TileSize, enemy.Y / map.TileSize, map.Width)] == Map.TileType.None)
-				//{
-				//	directions[(int)Enemy.Direction.RIGHT] = -Math.Sqrt(Math.Pow(player.X - enemy.X + (int)(enemy.MovSpeed * window.deltaTime), 2) + Math.Pow(player.Y - enemy.Y, 2));
-				//	//Utils.DrawRectFilled(window, enemy.X - 16 + (int)(enemy.MovSpeed * window.deltaTime), enemy.Y - 16, 32, 32, 128, 0, 218);
-				//}
-				//if (map.Tiles[Utils.GetPos(enemy.X / map.TileSize, (enemy.Y + (int)(enemy.MovSpeed * window.deltaTime + 15)) / map.TileSize, map.Width)] == Map.TileType.None)
-				//{
-				//	directions[(int)Enemy.Direction.DOWN] = -Math.Sqrt(Math.Pow(player.X - enemy.X, 2) + Math.Pow(player.Y - enemy.Y + (int)(enemy.MovSpeed * window.deltaTime), 2));
-				//	//Utils.DrawRectFilled(window, enemy.X - 16, enemy.Y - 16 + (int)(enemy.MovSpeed * window.deltaTime), 32, 32, 128, 0, 218);
-				//}
-				//if (map.Tiles[Utils.GetPos((enemy.X - (int)(enemy.MovSpeed * window.deltaTime) - 15) / map.TileSize, enemy.Y / map.TileSize, map.Width)] == Map.TileType.None)
-				//{
-				//	directions[(int)Enemy.Direction.LEFT] = -Math.Sqrt(Math.Pow(player.X - enemy.X - (int)(enemy.MovSpeed * window.deltaTime), 2) + Math.Pow(player.Y - enemy.Y, 2));
-				//	//Utils.DrawRectFilled(window, enemy.X - 16 + (int)(enemy.MovSpeed * window.deltaTime), enemy.Y - 16, 32, 32, 128, 0, 218);
-				//}
-				//int min = 0;
-				//for (int i = 1; i < directions.Length; i++)
-				//{
-				//	if ((directions[min] > directions[i] || directions[min] == 0) && directions[i] != 0)
-				//		min = i;
-				//}
 				if (Utils.Randomize(0, 100) == 0 && enemy.X % 32 >= 14 && enemy.X % 32 <= 18 && enemy.Y % 32 >= 14 && enemy.Y % 32 <= 18)
 				{
 					enemy.DirectionMoving = (Enemy.Direction)Utils.Randomize(0, 4);

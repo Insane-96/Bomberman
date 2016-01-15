@@ -1,4 +1,4 @@
-﻿using Aiv.Draw.OpenGL;
+﻿using Aiv.Fast2D;
 
 namespace Bomberman
 {
@@ -36,9 +36,9 @@ namespace Bomberman
 		public bool Invinvicility { get; private set; }
 		public bool Ghost { get; private set; }
 		public int TimeLasting { get; private set; }
-		public Sprite sprite { get; private set; }
+		public Sprite sprite;
 
-		public PowerUp(string Name, Sprite sprite = null, int PlayerSpeedIncrease = 0, int BombRadiusIncrease = 0, int BombAvailableIncrease = 0, float BombFuseTimeDecrease = 0f, bool UnlockSpinyBomb = false, bool Invinvicility = false, bool Ghost = false, int TimeLasting = -1)
+		public PowerUp(string Name, int PlayerSpeedIncrease = 0, int BombRadiusIncrease = 0, int BombAvailableIncrease = 0, float BombFuseTimeDecrease = 0f, bool UnlockSpinyBomb = false, bool Invinvicility = false, bool Ghost = false, int TimeLasting = -1)
 		{
 			this.Name = Name;
 			switch (Name)
@@ -67,11 +67,10 @@ namespace Bomberman
 					this.Invinvicility = Invinvicility;
 					this.Ghost = Ghost;
 					this.TimeLasting = TimeLasting;
-
-					this.sprite = new Sprite("../../assets/defaultUp.png");
 					break;
 			}
-			this.sprite = new Sprite("../../assets/defaultPowerUp.png");
+			this.sprite = new Sprite(32, 32);
+			sprite.DrawTexture(Game.PowerUpTexture);
 
 		}
 

@@ -1,4 +1,4 @@
-﻿using Aiv.Draw.OpenGL;
+﻿using Aiv.Fast2D;
 
 namespace Bomberman
 {

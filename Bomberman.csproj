@@ -60,8 +60,8 @@
     <OutputPath>bin\Prova\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AivDrawOpenGL, Version=1.0.5829.35015, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Aiv.Draw.OpenGL.0.1.1\lib\net40\AivDrawOpenGL.dll</HintPath>
+    <Reference Include="aiv-fast2d, Version=1.0.5849.29209, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Aiv.Fast2D.0.4.0\lib\net45\aiv-fast2d.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">

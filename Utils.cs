@@ -1,5 +1,5 @@
 ﻿using System;
-using Aiv.Draw.OpenGL;
+using Aiv.Fast2D;
 
 namespace Bomberman
 {
@@ -12,127 +12,7 @@ namespace Bomberman
 			return r.Next(n, m);
 		}
 
-		public static int GetPos(int x, int y, int width) => (y * width) + x;
-
-		public static void PutPixel(Window window, int x, int y, byte r, byte g, byte b, byte a = 255)
-		{
-			if (x > window.width - 1 || x < 0 || y > window.height || y < 0) return;
-			int pos = (y * 3* window.width) + x *3;
-
-			if (pos < window.bitmap.Length)
-			{
-				window.bitmap[pos] = r;
-				window.bitmap[pos + 1] = g;
-				window.bitmap[pos + 2] = b;
-			}
-		}
-
-		public static void Clear(Window window, byte r = 0, byte g = 0, byte b = 0, byte a = 255)
-		{
-			for (int y = 0; y < window.height; y++)
-			{
-				for (int x = 0; x < window.width; x++)
-				{
-					PutPixel(window, x, y, r, g, b, a);
-				}
-			}
-		}
-
-		public static void DrawHorizLine(Window window, int x, int y, int width, byte r, byte g, byte b, byte a = 255)
-		{
-			for (int posX = 0; posX < width; posX++)
-			{
-				PutPixel(window, x + posX, y, r, g, b, a);
-			}
-		}
-
-		public static void DrawVertLine(Window window, int x, int y, int height, byte r, byte g, byte b, byte a = 255)
-		{
-			for (int posY = 0; posY < height; posY++)
-			{
-				PutPixel(window, x, y + posY, r, g, b, a);
-			}
-		}
-
-		public static void DrawRect(Window window, int x, int y, int width, int height, byte r, byte g, byte b, byte a = 255)
-		{
-			DrawHorizLine(window, x, y, width, r, g, b, a);
-			DrawVertLine(window, x, y, height, r, g, b, a);
-			DrawHorizLine(window, x, y + height, width, r, g, b, a);
-			DrawVertLine(window, x + width, y, height, r, g, b, a);
-		}
-
-		public static void DrawRectFilled(Window window, int x, int y, int width, int height, byte r, byte g, byte b, byte a = 255)
-		{
-			for (int posY = 0; posY < height; posY++)
-				DrawHorizLine(window, x, y + posY, width, r, g, b, a);
-
-		}
-
-		public static void DrawFilledCircle(Window window, int _x, int _y, int radius, byte r, byte g, byte b, byte a = 255)
-		{
-			for (int x = -radius; x < radius; x++)
-			{
-				int height = (int)Math.Sqrt(radius * radius - x * x);
-
-				for (int y = -height; y < height; y++)
-				{
-					//if (y == -height || y == height - 1 || x == -radius || x == radius - 1)
-					PutPixel(window, x + _x, y + _y, r, g, b, a);
-				}
-			}
-		}
-
-		public static void DrawSprite(Window window, Sprite sprite, int posX, int posY, int xOffset, int yOffset, int width, int height)
-		{
-			for (int y = yOffset; y < (yOffset + height); y++)
-			{
-				for (int x = xOffset; x < xOffset + width; x++)
-				{
-					int pos = ((y * 4 * sprite.width) + x * 4);
-					byte r = sprite.bitmap[pos];
-					byte g = sprite.bitmap[pos + 1];
-					byte b = sprite.bitmap[pos + 2];
-					byte a = sprite.bitmap[pos + 3];
-					if (a == 255)
-						PutPixel(window, posX + x - xOffset, posY + y - yOffset, r, g, b);
-					//else
-					//	PutPixel(window, posX + x - xOffset, posY + y - yOffset, 0, 128, 0);
-				}
-			}
-
-		}
-
-		/*private static string[] numbers = new string[10]
-		{
-			"0000011111111100000,0001111111111111000,0111111111111111110,1111111111111111111,1111111100011111111,1111111000001111111,1111111000001111111,1111111000001111111,1111111000001111111,1111111000001111111,1111111000001111111,1111111100011111111,1111111111111111111,0111111111111111110,0001111111111111000,0000011111111100000",
-			"001111111000,011111111000,111111111000,111111111000,000111111000,000111111000,000111111000,000111111000,000111111000,000111111000,000111111000,000111111000,111111111111,111111111111,111111111111,111111111111",
-			"01111111111111110000,11111111111111111100,11111111111111111110,11111110000011111110,00000000000011111110,00000000000011111110,00000000011111111100,00001111111111111000,00111111111111100000,01111111111100000000,11111110000000000000,11111110000000000000,11111110000000111111,11111111111111111111,11111111111111111111,11111111111111111111",
-			"0111111111111111000,1111111111111111110,1111111111111111111,1111111000001111111,0000000000001111111,0000000000001111111,0000111111111111110,0000111111111111100,0000111111111111110,0000000000001111111,0000000000001111111,0000000000001111111,1111111000001111111,1111111111111111111,1111111111111111110,0111111111111111000",
-			"000000011111111100,000000111111111100,000001111111111100,000011111111111100,000111111011111100,001111110011111100,011111100011111100,111111111111111111,111111111111111111,111111111111111111,000000000011111100,000000000011111100,000000000011111100,000000001111111111,000000001111111111,000000001111111111",
-			"1111111111111111110,1111111111111111110,1111111111111111110,1111111111111111110,1111111000000000000,1111111000000000000,1111111111111111000,1111111111111111100,1111111111111111110,0000000000001111111,0000000000001111111,1111111000001111111,1111111111111111111,0111111111111111110,0001111111111111000,0000011111111100000",
-			"0000000011111111000,0000000111111110000,0000001111111100000,0000011111111000000,0000111111110000000,0001111111100000000,0011111111000000000,0111111111111110000,1111111111111111100,1111111111111111110,1111111000001111111,1111111000001111111,1111111111111111111,0111111111111111110,0001111111111111000,0000011111111100000",
-			"11111111111111111111,11111111111111111111,11111111111111111111,11111111111111111111,00000000000111111110,00000000001111111100,00000000011111111000,00000000111111110000,00000001111111100000,00000011111111000000,00000111111110000000,00001111111100000000,00011111111000000000,00111111110000000000,01111111100000000000,11111111000000000000",
-			"0000011111111100000,0001111111111111000,0111111111111111110,1111111111111111111,1111111000001111111,1111111000001111111,0111111111111111110,0011111111111111100,0111111111111111110,1111111000001111111,1111111000001111111,1111111000001111111,1111111111111111111,0111111111111111110,0001111111111111000,0000011111111100000",
-			"0000011111111100000,0001111111111111000,0111111111111111110,1111111111111111111,1111111000001111111,1111111000001111111,0111111111111111111,0011111111111111111,0000111111111111110,0000000001111111100,0000000011111111000,0000000111111110000,0000001111111100000,0000011111111000000,0000111111110000000,0001111111100000000"
-	};
-
-		public static void DrawNumber(byte number, Window window, int x, int y)
-		{
-			if (number > 9)
-				return;
-			else
-			{
-				string[] split = numbers[number].Split(',');
-				for (int i = 0; i < split.Length; i++)
-				{
-					for (int p = 0; p < split[i].Length; p++)
-					{
-						if (split[i][p] == '1')
-						PutPixel(window, 0, 0, 0, x + p, y + i, 255);
-					}
-				}
-			}
-		}*/
+		public static int GetPos(int x, int y, int width) => y * width + x;
+	
 	}
 }

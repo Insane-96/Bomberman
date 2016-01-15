@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Aiv.Draw.OpenGL;
+using Aiv.Fast2D;
 
 namespace Bomberman
 {
@@ -24,8 +24,11 @@ namespace Bomberman
 		public int MovSpeed;
 		public KeyMap KeyMap;
 		private Sprite sprite;
+		private int animSpeed;
+		private float animOffest;
+		private bool isMoving = false;
 
-		public Player(int x, int y, KeyMap keyMap, string spritePath)
+		public Player(int x, int y, KeyMap keyMap)
 		{
 			X = x * Game.map.TileSize + Game.map.TileSize / 2;
 			Y = y * Game.map.TileSize + Game.map.TileSize / 2;
@@ -36,14 +39,16 @@ namespace Bomberman
 			KeyMap = keyMap;
 			SpinyBombs = false;
 			MovSpeed = 100;
-			sprite = new Sprite(spritePath);
+			sprite = new Sprite(32, 32);
+
+			isMoving = false;
+			animSpeed = 8;
 
 			Bombs = new List<Bomb>();
 		}
 
 		public void PlaceBomb()
 		{
-			Window window = Game.window;
 			Map map = Game.map;
 			if (BombsAvailable > 0 && map.Tiles[Utils.GetPos(X / map.TileSize, Y / map.TileSize, map.Width)] == Map.TileType.None)
 			{
@@ -58,6 +63,7 @@ namespace Bomberman
 
 		private void Move(Direction direction)
 		{
+			this.isMoving = true;
 			Window window = Game.window;
 			Map map = Game.map;
 			if (this.X % 32 >= 15 && this.X % 32 <= 17)
@@ -151,7 +157,15 @@ namespace Bomberman
 
 		public void Draw()
 		{
-			Utils.DrawSprite(Game.window, sprite, X - 16 + Game.map.Scroll, Y - 16, 0, 0, 32, 32);
+			if (this.isMoving)
+			{
+				animOffest += animSpeed * Game.window.deltaTime;
+				if (animOffest > 3)
+					animOffest = 0;
+			}
+			this.sprite.position.X = this.X - 16 + Game.map.Scroll;
+			this.sprite.position.Y = this.Y - 16;
+			this.sprite.DrawTexture(Game.PlayerTexture, (int)animOffest * 32, 0, 32, 32);
 		}
 
 		public void checkMovement()
@@ -164,9 +178,10 @@ namespace Bomberman
 				this.Move(Player.Direction.DOWN);
 			else if (window.GetKey(this.KeyMap.Up) && this.Y > 0)
 				this.Move(Player.Direction.UP);
-			else if (window.GetKey(this.KeyMap.Right) && this.X < map.Width * map.TileSize)
+			else if (window.GetKey(this.KeyMap.Right) && this.X < map.Width*map.TileSize)
 				this.Move(Player.Direction.RIGHT);
-
+			else
+				this.isMoving = false;
 			if (window.GetKey(this.KeyMap.PlaceBomb))
 				this.PlaceBomb();
 		}

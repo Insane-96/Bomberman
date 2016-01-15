@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Net;
 using System.Runtime.CompilerServices;
-using Aiv.Draw.OpenGL;
+using Aiv.Fast2D;
 
 namespace Bomberman
 {
@@ -21,7 +22,7 @@ namespace Bomberman
 		public int Y;
 		private Sprite sprite;
 
-		public Enemy(int MaxHealth, int MovSpeed, int X, int Y, int Health = -1, Sprite sprite = null)
+		public Enemy(int MaxHealth, int MovSpeed, int X, int Y, int Health = -1)
 		{
 			this.MaxHealth = MaxHealth;
 			this.MovSpeed = MovSpeed;
@@ -30,15 +31,10 @@ namespace Bomberman
 			else
 				this.Health = Health;
 
-			if (sprite == null)
-				this.sprite = Game.EnemySprite;
-			else
-				this.sprite = sprite;
+			this.sprite = new Sprite(32, 32);
 
 			this.X = X * Game.map.TileSize + Game.map.TileSize / 2;
 			this.Y = Y * Game.map.TileSize + Game.map.TileSize / 2;
-
-			
 
 		}
 
@@ -53,12 +49,18 @@ namespace Bomberman
 			Map map = Game.map;
 			if (this.X % 32 >= 14 && this.X % 32 <= 18)
 			{
-				if (this.DirectionMoving == Direction.UP && map.Tiles[Utils.GetPos(this.X / map.TileSize, (this.Y - (int)(MovSpeed * window.deltaTime) - 16) / map.TileSize, map.Width)] == Map.TileType.None)
+				if (this.DirectionMoving == Direction.UP &&
+					map.Tiles[
+						Utils.GetPos(this.X / map.TileSize, (this.Y - (int)(MovSpeed * window.deltaTime) - 16) / map.TileSize, map.Width)] ==
+					Map.TileType.None)
 				{
 					this.Y -= (int)(MovSpeed * window.deltaTime);
 					this.X = this.X - this.X % 32 + 16;
 				}
-				else if (this.DirectionMoving == Direction.DOWN &&  map.Tiles[Utils.GetPos(this.X / map.TileSize, (this.Y + (int)(MovSpeed * window.deltaTime) + 16) / map.TileSize, map.Width)] == Map.TileType.None)
+				else if (this.DirectionMoving == Direction.DOWN &&
+						 map.Tiles[
+							 Utils.GetPos(this.X / map.TileSize, (this.Y + (int)(MovSpeed * window.deltaTime) + 16) / map.TileSize, map.Width)] ==
+						 Map.TileType.None)
 				{
 					this.Y += (int)(MovSpeed * window.deltaTime);
 					this.X = this.X - this.X % 32 + 16;
@@ -71,7 +73,10 @@ namespace Bomberman
 					this.X += (int)(MovSpeed * window.deltaTime);
 					this.Y = this.Y - this.Y % 32 + 16;
 				}
-				else if (this.DirectionMoving == Direction.LEFT && map.Tiles[Utils.GetPos((this.X - (int)(MovSpeed * window.deltaTime) - 16) / map.TileSize, this.Y / map.TileSize, map.Width)] == Map.TileType.None)
+				else if (this.DirectionMoving == Direction.LEFT &&
+						 map.Tiles[
+							 Utils.GetPos((this.X - (int)(MovSpeed * window.deltaTime) - 16) / map.TileSize, this.Y / map.TileSize, map.Width)] ==
+						 Map.TileType.None)
 				{
 					this.X -= (int)(MovSpeed * window.deltaTime);
 					this.Y = this.Y - this.Y % 32 + 16;
@@ -108,7 +113,9 @@ namespace Bomberman
 
 		public void Draw()
 		{
-			Utils.DrawSprite(Game.window, this.sprite, this.X + Game.map.Scroll - 16, this.Y - 16, 0, 0, 32, 32);
+			sprite.position.X = this.X - 16 + Game.map.Scroll;
+			sprite.position.Y = this.Y - 16;
+			sprite.DrawTexture(Game.EnemyTexture);
 		}
 	}
 }

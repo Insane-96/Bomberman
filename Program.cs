@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Resources;
 using System.Windows.Forms;
-using Aiv.Draw.OpenGL;
+using Aiv.Fast2D;
 //using Bomberman;
 
 namespace Bomberman

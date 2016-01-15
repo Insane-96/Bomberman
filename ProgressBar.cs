@@ -58,10 +58,10 @@
 		{
 			for (int x = 0; x < Width; x++)
 			{
-				if (x < Width / (float)(Maximum - Minimum) * value)
-					Utils.DrawVertLine(Game.window, PosX + x + Game.map.Scroll, PosY, Height, FColorR, FColorG, FColorB);
-				else
-					Utils.DrawVertLine(Game.window, PosX + x + Game.map.Scroll, PosY, Height, BColorR, BColorG, BColorB);
+				//if (x < Width / (float)(Maximum - Minimum) * value)
+					//Utils.DrawVertLine(Game.window, PosX + x + Game.map.Scroll, PosY, Height, FColorR, FColorG, FColorB);
+				//else
+					//Utils.DrawVertLine(Game.window, PosX + x + Game.map.Scroll, PosY, Height, BColorR, BColorG, BColorB);
 			}
 		}
 
