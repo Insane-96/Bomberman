@@ -86,6 +86,8 @@ namespace Bomberman
 				player.SpinyBombs = this.UnlockSpinyBomb;
 			if (player.MovSpeed < 200)
 				player.MovSpeed += this.PlayerSpeedIncrease;
+
+
 		}
 	}
 }

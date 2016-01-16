@@ -1,4 +1,5 @@
 ﻿using Aiv.Fast2D;
+using Aiv.Vorbis;
 
 namespace Bomberman
 {
@@ -7,8 +8,9 @@ namespace Bomberman
 		public int X;
 		public int Y;
 		public float TimeToExplode;
-		ProgressBar TimerBar;
-		Sprite sprite = new Sprite(32, 32);
+		private ProgressBar TimerBar;
+		private Sprite sprite = new Sprite(32, 32);
+		AudioClip audioClip;
 
 		/*public Bomb()
 		{
@@ -23,6 +25,7 @@ namespace Bomberman
 			X = x;
 			Y = y;
 			TimerBar = new ProgressBar(0, (int)(TimeToExplode * 100), (int)(TimeToExplode * 100), X * Game.map.TileSize, Y * Game.map.TileSize, 32, 3, 200, 200, 0, 128, 0, 0);
+			audioClip = new AudioClip("../../assets/explosion" + Utils.Randomize(1, 3) + ".ogg");
 		}
 
 		public bool Fuse(Player player)
@@ -53,6 +56,8 @@ namespace Bomberman
 			player.BombsPlaced--;
 			map.Tiles[Utils.GetPos(this.X, this.Y, map.Width)] = Map.TileType.None;
 			DestroyTiles(player);
+			Game.audioSource.Play(audioClip);
+			//Game.StartMusic();
 		}
 
 		private void DestroyTiles(Player player)

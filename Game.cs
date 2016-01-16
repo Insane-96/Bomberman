@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Aiv.Fast2D;
+using Aiv.Vorbis;
 
 namespace Bomberman
 {
@@ -14,7 +15,9 @@ namespace Bomberman
 		public static Texture EnemyTexture;
 		public static Texture PowerUpTexture;
 		public static Player player;
+		public static Player player2;
 		public static Texture PlayerTexture;
+		public static AudioSource audioSource;
 
 		public static Texture BackgroundTexture;
 		public static Sprite BackgroundSprite;
@@ -30,6 +33,8 @@ namespace Bomberman
 		{
 			////init window
 			window = new Window(976, 544, "Bomberman");
+
+			audioSource = new AudioSource();
 
 			PlayerTexture = new Texture("../../../Bomberman/assets/player.png");
 			BombTexture = new Texture("../../assets/bomb.png");
@@ -52,6 +57,9 @@ namespace Bomberman
 			//init player's key map and player
 			KeyMap player1KeyMap = new KeyMap(KeyCode.Left, KeyCode.Right, KeyCode.Up, KeyCode.Down, KeyCode.Space);
 			player = new Player(1, 1, player1KeyMap);
+
+			KeyMap player2KeyMap = new KeyMap(KeyCode.A, KeyCode.D, KeyCode.W, KeyCode.S, KeyCode.F);
+			player2 = new Player(1, 1, player2KeyMap);
 
 			//init enemies
 			EnemiesList = new Enemy[5];
@@ -122,6 +130,8 @@ namespace Bomberman
 				if (Utils.Randomize(0, 100) == 0 && enemy.X % 32 >= 14 && enemy.X % 32 <= 18 && enemy.Y % 32 >= 14 && enemy.Y % 32 <= 18)
 				{
 					enemy.DirectionMoving = (Enemy.Direction)Utils.Randomize(0, 4);
+					enemy.spriteState = Utils.Randomize(0, 4);
+					
 				}
 				switch (enemy.DirectionMoving)
 				{
@@ -136,6 +146,7 @@ namespace Bomberman
 									enemy.RandomDirection();
 								else
 									enemy.DirectionMoving = Enemy.Direction.DOWN;
+								enemy.spriteState = Utils.Randomize(0, 4);
 							}
 						}
 						break;
@@ -149,6 +160,7 @@ namespace Bomberman
 									enemy.RandomDirection();
 								else
 									enemy.DirectionMoving = Enemy.Direction.LEFT;
+								enemy.spriteState = Utils.Randomize(0, 4);
 							}
 						break;
 					case Enemy.Direction.DOWN:
@@ -161,6 +173,7 @@ namespace Bomberman
 									enemy.RandomDirection();
 								else
 									enemy.DirectionMoving = Enemy.Direction.UP;
+								enemy.spriteState = Utils.Randomize(0, 4);
 							}
 						break;
 					case Enemy.Direction.LEFT:
@@ -173,11 +186,17 @@ namespace Bomberman
 									enemy.RandomDirection();
 								else
 									enemy.DirectionMoving = Enemy.Direction.RIGHT;
+								enemy.spriteState = Utils.Randomize(0, 4);
 							}
 						break;
 				}
 				enemy.Move();
 			}
+		}
+
+		public static void StartMusic()
+		{
+			
 		}
 	}
 }

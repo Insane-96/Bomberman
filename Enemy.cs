@@ -111,11 +111,19 @@ namespace Bomberman
 		//			this.X -= (int)(MovSpeed * Game.window.deltaTime);
 		//}
 
+		public int spriteState = 0;
+		public float spriteStateY = 0;
+		
 		public void Draw()
 		{
 			sprite.position.X = this.X - 16 + Game.map.Scroll;
 			sprite.position.Y = this.Y - 16;
-			sprite.DrawTexture(Game.EnemyTexture);
+			
+			sprite.DrawTexture(Game.EnemyTexture, spriteState * 32, (int)spriteStateY * 32, 32, 32);
+
+			spriteStateY += 1.5f * Game.window.deltaTime;
+			if (spriteStateY >= 2)
+				spriteStateY = 0;
 		}
 	}
 }

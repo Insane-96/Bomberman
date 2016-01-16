@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Aiv.Fast2D;
+using Aiv.Vorbis;
 
 namespace Bomberman
 {
@@ -33,7 +34,7 @@ namespace Bomberman
 			X = x * Game.map.TileSize + Game.map.TileSize / 2;
 			Y = y * Game.map.TileSize + Game.map.TileSize / 2;
 			BombsPlaced = 0;
-			BombsAvailable = 1;
+			BombsAvailable = 5;
 			BombRadius = 1;
 			BombFuseTime = 4f;
 			KeyMap = keyMap;
@@ -66,6 +67,7 @@ namespace Bomberman
 			this.isMoving = true;
 			Window window = Game.window;
 			Map map = Game.map;
+			//Game.audioSource.Play(new AudioClip("../../assets/powerUp1.ogg"));
 			if (this.X % 32 >= 15 && this.X % 32 <= 17)
 			{
 				if (direction == Direction.UP && map.Tiles[Utils.GetPos(this.X / map.TileSize, (this.Y - (int)(MovSpeed * window.deltaTime) - 16) / map.TileSize, map.Width)] == Map.TileType.None)
