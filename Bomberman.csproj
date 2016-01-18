@@ -60,13 +60,12 @@
     <OutputPath>bin\Prova\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="aiv-fast2d, Version=1.0.5849.29209, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Aiv.Fast2D.0.4.0\lib\net45\aiv-fast2d.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="aiv-fast2d">
+      <HintPath>..\aiv-fast2d-master\aiv-fast2d\bin\Debug\aiv-fast2d.dll</HintPath>
     </Reference>
     <Reference Include="aiv-vorbis, Version=1.0.5849.26838, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\aiv-vorbis\aiv-vorbis\bin\Debug\aiv-vorbis.dll</HintPath>
+      <HintPath>packages\Aiv.Vorbis.0.1.0\lib\net45\aiv-vorbis.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NVorbis, Version=0.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\NVorbis.0.8.4.0\lib\NVorbis.dll</HintPath>

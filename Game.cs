@@ -39,7 +39,7 @@ namespace Bomberman
 			////init window
 			window = new Window(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height, "Bomberman", true);
 
-			PlayerTexture = new Texture("../../../Bomberman/assets/player.png");
+			PlayerTexture = new Texture("../../assets/player.png");
 			BombTexture = new Texture("../../assets/bomb.png");
 			WallTexture = new Texture("../../assets/wall.png");
 			DestrWallTexture = new Texture("../../assets/destrWall.png");
