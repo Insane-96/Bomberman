@@ -23,24 +23,29 @@ namespace Bomberman
 		public int X { get; private set; }
 		public int Y { get; private set; }
 		public int MovSpeed;
-		public KeyMap KeyMap;
+		private KeyMap KeyMap;
 		private Sprite sprite;
 		private int animSpeed;
 		private float animOffest;
 		private bool isMoving = false;
+		private AudioSource audioSource;
+		private AudioClip audioClip;
 
 		public Player(int x, int y, KeyMap keyMap)
 		{
 			X = x * Game.map.TileSize + Game.map.TileSize / 2;
 			Y = y * Game.map.TileSize + Game.map.TileSize / 2;
 			BombsPlaced = 0;
-			BombsAvailable = 5;
+			BombsAvailable = 1;
 			BombRadius = 1;
 			BombFuseTime = 4f;
 			KeyMap = keyMap;
 			SpinyBombs = false;
 			MovSpeed = 100;
 			sprite = new Sprite(32, 32);
+
+			audioSource = new AudioSource();
+			audioClip = new AudioClip("../../assets/move.ogg");
 
 			isMoving = false;
 			animSpeed = 8;
@@ -53,7 +58,7 @@ namespace Bomberman
 			Map map = Game.map;
 			if (BombsAvailable > 0 && map.Tiles[Utils.GetPos(X / map.TileSize, Y / map.TileSize, map.Width)] == Map.TileType.None)
 			{
-				Bombs.Add(new Bomb(X / map.TileSize, Y / map.TileSize, BombFuseTime));
+				Bombs.Add(new Bomb(X / map.TileSize, Y / map.TileSize, BombFuseTime, Game.stateJohn == 20 ? true : false));
 
 				map.Tiles[Utils.GetPos(X / map.TileSize, Y / map.TileSize, map.Width)] = Map.TileType.Bomb;
 
@@ -64,10 +69,12 @@ namespace Bomberman
 
 		private void Move(Direction direction)
 		{
+			//if (!audioSource.IsPlaying)
+			//	audioSource.Play(audioClip);
 			this.isMoving = true;
 			Window window = Game.window;
 			Map map = Game.map;
-			//Game.audioSource.Play(new AudioClip("../../assets/powerUp1.ogg"));
+			
 			if (this.X % 32 >= 15 && this.X % 32 <= 17)
 			{
 				if (direction == Direction.UP && map.Tiles[Utils.GetPos(this.X / map.TileSize, (this.Y - (int)(MovSpeed * window.deltaTime) - 16) / map.TileSize, map.Width)] == Map.TileType.None)
@@ -129,6 +136,8 @@ namespace Bomberman
 			Game.map.CheckScroll(this);
 		}
 
+		#region movimento
+
 		private void yMoveDiagonally()
 		{
 			if (this.Y % 32 >= 5 && this.Y % 32 < 15)
@@ -157,6 +166,8 @@ namespace Bomberman
 					this.X -= (int)(MovSpeed * Game.window.deltaTime);
 		}
 
+#endregion
+
 		public void Draw()
 		{
 			if (this.isMoving)
@@ -170,7 +181,7 @@ namespace Bomberman
 			this.sprite.DrawTexture(Game.PlayerTexture, (int)animOffest * 32, 0, 32, 32);
 		}
 
-		public void checkMovement()
+		public void CheckMovement()
 		{
 			Window window = Game.window;
 			Map map = Game.map;

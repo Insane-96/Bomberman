@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Aiv.Fast2D;
 using Aiv.Vorbis;
+using OpenTK;
+using OpenTK.Input;
 
 namespace Bomberman
 {
@@ -17,12 +20,14 @@ namespace Bomberman
 		public static Player player;
 		public static Player player2;
 		public static Texture PlayerTexture;
-		public static AudioSource audioSource;
 
 		public static Texture BackgroundTexture;
 		public static Sprite BackgroundSprite;
 
 		public static Enemy[] EnemiesList;
+
+		public static int stateJohn = 0;
+		private static Bomb bombCena;
 
 		static Game()
 		{
@@ -32,9 +37,7 @@ namespace Bomberman
 		private static void init()
 		{
 			////init window
-			window = new Window(976, 544, "Bomberman");
-
-			audioSource = new AudioSource();
+			window = new Window(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height, "Bomberman", true);
 
 			PlayerTexture = new Texture("../../../Bomberman/assets/player.png");
 			BombTexture = new Texture("../../assets/bomb.png");
@@ -49,7 +52,7 @@ namespace Bomberman
 			BackgroundTexture.Bitmap[2] = 0;
 			BackgroundTexture.Bitmap[3] = 255;
 			BackgroundTexture.Update();
-			BackgroundSprite = new Sprite(976, 544);
+			BackgroundSprite = new Sprite(window.Width, window.Height);
 
 			//init map
 			map = new Map(32);
@@ -79,11 +82,11 @@ namespace Bomberman
 		public static void Update()
 		{
 			Console.SetCursorPosition(0, 0);
-			Console.WriteLine("FPS: {0}            ", 1 / Game.window.deltaTime);
+			Console.WriteLine("FPS: {0}            ", 1/Game.window.deltaTime);
 
 			BackgroundSprite.DrawTexture(BackgroundTexture, 0, 0);
 
-			player.checkMovement();
+			player.CheckMovement();
 
 			EnemiesAI();
 
@@ -93,19 +96,41 @@ namespace Bomberman
 
 			player.PrintInfo();
 
+			Text.ChangeColor(Color.White);
+			Text.PrintText("Fuse time " + player.BombFuseTime + " seconds", 0, 580, 12, 20);
+			Text.PrintText("Bombs " + (player.BombsAvailable + player.BombsPlaced), 0, 580 + 20, 12, 20);
+			Text.PrintText("Movement Speed " + player.MovSpeed + " pps", 0, 580 + 40, 12, 20);
+			Text.PrintText("Radius " + player.BombRadius, 0, 580 + 60, 12, 20);
+			Text.PrintText("Spiny Bombs " + player.SpinyBombs, 0, 580 + 80, 12, 20);
+			//Text.PrintText(window.mouseX + " " + window.mouseY, 0, 580 + 100, 12, 20);
+
+			if (stateJohn == 21)
+			{
+				bombCena.johnSprite.DrawTexture(bombCena.johnTexture, ((int)(bombCena.johnIndex % 5) * bombCena.johnSprite.Width / 5) + map.Scroll, ((int)(bombCena.johnIndex / 5) * bombCena.johnSprite.Height / 5), bombCena.johnSprite.Width / 5, bombCena.johnSprite.Height / 5);
+				bombCena.johnIndex += 20 * window.deltaTime;
+				if (bombCena.johnIndex >= 16)
+					stateJohn = 22;
+			}
+
 			//Fuse bombs
 			List<Bomb> toRemove = new List<Bomb>();
 			foreach (Bomb bomb in player.Bombs)
 			{
 				if (bomb.Fuse(player))
+				{
+					if (stateJohn == 21)
+					{
+						bombCena = bomb;
+					}
 					toRemove.Add(bomb);
+				}
+
 			}
 			foreach (var bombToRemove in toRemove)
 			{
 				player.Bombs.Remove(bombToRemove);
 			}
 			toRemove.Clear();
-
 			//Draw
 			Game.window.Update();
 
@@ -113,6 +138,19 @@ namespace Bomberman
 			if (Game.window.GetKey(KeyCode.Esc) && Game.window.GetKey(KeyCode.Return))
 				Game.window.opened = false;
 
+			//ee
+			if (window.mouseLeft)
+			{
+				if (stateJohn == 0 && window.mouseX == 0 && window.mouseY == window.Height - 1)
+				{
+					stateJohn = 1;
+				}
+				else if (stateJohn >= 1 && stateJohn < 20 && window.mouseX >= player.X - 16 && window.mouseX <= player.X + 16 && window.mouseY >= player.Y - 16 &&
+				         window.mouseY <= player.Y + 16)
+				{
+					stateJohn++;
+				}
+			}
 		}
 
 		public static void DrawEnemies()
@@ -131,7 +169,7 @@ namespace Bomberman
 				{
 					enemy.DirectionMoving = (Enemy.Direction)Utils.Randomize(0, 4);
 					enemy.spriteState = Utils.Randomize(0, 4);
-					
+
 				}
 				switch (enemy.DirectionMoving)
 				{
@@ -196,7 +234,7 @@ namespace Bomberman
 
 		public static void StartMusic()
 		{
-			
+
 		}
 	}
 }

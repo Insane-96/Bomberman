@@ -1,4 +1,5 @@
 ﻿using Aiv.Fast2D;
+using Aiv.Vorbis;
 
 namespace Bomberman
 {
@@ -12,15 +13,6 @@ namespace Bomberman
 			DecreaseBombFuse,
 			UnlockSpinyBomb,
 		}
-
-		//public Dictionary<PowerUps, string> PowerUpDictionary = new Dictionary<PowerUps, string>()
-		//{
-		//	{PowerUps.SpeedUp, "SpeedUp" },
-		//	{PowerUps.RadiusUp, "RadiusUp" },
-		//	{PowerUps.BombsUp, "BombsUp" },
-		//	{PowerUps.BombFuseUp, "BombFuseUp" },
-		//	{PowerUps.SpinyBomb, "SpinyBomb" }
-		//};
 
 		public static string[] PowerUpsList = new string[]
 		{
@@ -37,6 +29,8 @@ namespace Bomberman
 		public bool Ghost { get; private set; }
 		public int TimeLasting { get; private set; }
 		public Sprite sprite;
+		private AudioSource audioSource;
+		private AudioClip audioClip;
 
 		public PowerUp(string Name, int PlayerSpeedIncrease = 0, int BombRadiusIncrease = 0, int BombAvailableIncrease = 0, float BombFuseTimeDecrease = 0f, bool UnlockSpinyBomb = false, bool Invinvicility = false, bool Ghost = false, int TimeLasting = -1)
 		{
@@ -72,6 +66,8 @@ namespace Bomberman
 			this.sprite = new Sprite(32, 32);
 			sprite.DrawTexture(Game.PowerUpTexture);
 
+			audioSource = new AudioSource();
+			audioClip = new AudioClip("../../assets/powerUp" + Utils.Randomize(1, 2) + ".ogg");
 		}
 
 		public void PickUp(Player player)
@@ -87,7 +83,7 @@ namespace Bomberman
 			if (player.MovSpeed < 200)
 				player.MovSpeed += this.PlayerSpeedIncrease;
 
-
+			audioSource.Play(audioClip);
 		}
 	}
 }
